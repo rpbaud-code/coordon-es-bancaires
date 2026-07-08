@@ -43,6 +43,10 @@ Sur le plan gratuit de Render, le disque n'est **pas garanti persistant** entre 
 - Évite de redéployer le service tant que tu n'as pas récupéré les réponses.
 - Pour une collecte plus longue ou plus critique, envisager un plan payant Render avec disque persistant, ou brancher l'enregistrement sur une base de données externe.
 
+## Vider les réponses
+
+Pour repartir de zéro (par exemple entre deux collectes), va sur `https://<ton-app>.onrender.com/reset?token=<ADMIN_TOKEN>` : une page de confirmation s'affiche avant la suppression définitive du CSV. Pense à télécharger le CSV via `/export` avant si tu veux garder une copie.
+
 ## Notification par email à chaque nouvel enregistrement
 
 L'application envoie un email via l'API [Resend](https://resend.com) à chaque soumission valide.

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vider les réponses</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="carte">
+    <h1>Vider les réponses</h1>
+    <p class="intro">Cette action supprime définitivement toutes les réponses enregistrées jusqu'ici. Assure-toi d'avoir téléchargé le CSV via /export si besoin avant de continuer.</p>
+    <form method="post">
+      <input type="hidden" name="token" value="{{ token }}">
+      <button type="submit">Confirmer la suppression</button>
+    </form>
+  </main>
+</body>
+</html>

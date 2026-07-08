@@ -133,5 +133,18 @@ def export():
     return send_file(CSV_PATH, as_attachment=True, download_name="reponses.csv")
 
 
+@app.route("/reset", methods=["GET", "POST"])
+def reset():
+    token = request.values.get("token", "")
+    if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+        abort(403)
+    if request.method == "POST":
+        with _csv_lock:
+            if os.path.isfile(CSV_PATH):
+                os.remove(CSV_PATH)
+        return "Fichier vidé."
+    return render_template("reset.html", token=token)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
