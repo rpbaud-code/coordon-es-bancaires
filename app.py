@@ -101,7 +101,7 @@ def notifier_par_email(ligne):
         f"Reçu le: {ligne['horodatage']}\n"
     )
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as smtp:
             smtp.login(SMTP_USER, SMTP_PASSWORD)
             smtp.send_message(message)
     except Exception:
@@ -114,7 +114,7 @@ def formulaire():
         valeurs, erreurs = valider_champs(request.form)
         if not erreurs:
             ligne = enregistrer(valeurs)
-            notifier_par_email(ligne)
+            threading.Thread(target=notifier_par_email, args=(ligne,), daemon=True).start()
             return render_template("index.html", succes=True, valeurs={})
         return render_template("index.html", succes=False, valeurs=valeurs, erreurs=erreurs)
     return render_template("index.html", succes=False, valeurs={}, erreurs={})
