@@ -52,9 +52,7 @@ def valider_champs(form):
     elif not iban_valide(valeurs["iban"]):
         erreurs["iban"] = "Format IBAN invalide."
 
-    if not valeurs["swift"]:
-        erreurs["swift"] = "Ce champ est obligatoire."
-    elif not swift_valide(valeurs["swift"]):
+    if valeurs["swift"] and not swift_valide(valeurs["swift"]):
         erreurs["swift"] = "Format SWIFT/BIC invalide (8 ou 11 caractères)."
 
     return valeurs, erreurs

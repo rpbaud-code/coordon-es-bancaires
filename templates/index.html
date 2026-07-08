@@ -28,7 +28,7 @@
         </div>
 
         <div class="champ">
-          <label for="swift">SWIFT / BIC</label>
+          <label for="swift">SWIFT / BIC (optionnel)</label>
           <input type="text" id="swift" name="swift" placeholder="XXXXFRXX" value="{{ valeurs.get('swift', '') }}">
           {% if erreurs.get('swift') %}<p class="erreur">{{ erreurs['swift'] }}</p>{% endif %}
         </div>
