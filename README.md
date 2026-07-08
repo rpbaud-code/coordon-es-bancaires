@@ -45,18 +45,20 @@ Sur le plan gratuit de Render, le disque n'est **pas garanti persistant** entre 
 
 ## Notification par email à chaque nouvel enregistrement
 
-L'application peut envoyer un email (via Gmail) à chaque soumission valide. Pour l'activer, ajouter ces variables d'environnement (en local dans un fichier `.env` non commité, ou sur Render dans **Environment**) :
+L'application envoie un email via l'API [Resend](https://resend.com) à chaque soumission valide.
 
-- `SMTP_USER` : l'adresse Gmail utilisée pour envoyer (ex: `rpbaud@gmail.com`)
-- `SMTP_PASSWORD` : un **mot de passe d'application** Gmail (pas le mot de passe normal du compte)
+**Important** : l'envoi passe par une API HTTPS (Resend) et non par SMTP direct, car les plans gratuits Render bloquent les connexions SMTP sortantes (mesure anti-spam).
+
+Variables d'environnement à définir (en local dans un fichier `.env` non commité, ou sur Render dans **Environment**) :
+
+- `RESEND_API_KEY` : clé API de ton compte Resend
 - `NOTIFY_EMAIL` : l'adresse qui reçoit la notification (ex: `rpbaud@gmail.com`)
 
-### Créer un mot de passe d'application Gmail
+### Configurer Resend
 
-1. Activer la validation en deux étapes sur le compte Google si ce n'est pas déjà fait : [myaccount.google.com/security](https://myaccount.google.com/security).
-2. Aller sur [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords).
-3. Créer un mot de passe d'application (nom libre, ex: "coordonnees-bancaires").
-4. Copier le mot de passe généré (16 caractères) et l'utiliser comme valeur de `SMTP_PASSWORD`.
+1. Créer un compte gratuit sur [resend.com](https://resend.com) (100 emails/jour gratuits).
+2. Aller dans **API Keys** → créer une clé → la copier dans `RESEND_API_KEY`.
+3. Sans domaine vérifié, Resend n'autorise l'envoi qu'à l'adresse email utilisée pour créer le compte — largement suffisant ici puisque `NOTIFY_EMAIL` doit être cette même adresse.
 
 Si ces variables ne sont pas définies, l'application fonctionne normalement mais n'envoie simplement aucun email.
 

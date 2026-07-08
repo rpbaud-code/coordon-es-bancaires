@@ -1,11 +1,10 @@
 import csv
 import os
 import re
-import smtplib
 import threading
 from datetime import datetime, timezone
-from email.message import EmailMessage
 
+import requests
 from flask import Flask, render_template, request, send_file, abort
 
 app = Flask(__name__)
@@ -24,8 +23,7 @@ FIELDNAMES = [
 ]
 
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
-SMTP_USER = os.environ.get("SMTP_USER", "")
-SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 NOTIFY_EMAIL = os.environ.get("NOTIFY_EMAIL", "")
 _csv_lock = threading.Lock()
 
@@ -86,13 +84,9 @@ def enregistrer(valeurs):
 
 
 def notifier_par_email(ligne):
-    if not (SMTP_USER and SMTP_PASSWORD and NOTIFY_EMAIL):
+    if not (RESEND_API_KEY and NOTIFY_EMAIL):
         return
-    message = EmailMessage()
-    message["Subject"] = f"Nouvelle coordonnée bancaire reçue — {ligne['nom_groupe']}"
-    message["From"] = SMTP_USER
-    message["To"] = NOTIFY_EMAIL
-    message.set_content(
+    texte = (
         f"Groupe: {ligne['nom_groupe']}\n"
         f"IBAN: {ligne['iban']}\n"
         f"SWIFT: {ligne['swift'] or '(non renseigné)'}\n"
@@ -101,9 +95,18 @@ def notifier_par_email(ligne):
         f"Reçu le: {ligne['horodatage']}\n"
     )
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as smtp:
-            smtp.login(SMTP_USER, SMTP_PASSWORD)
-            smtp.send_message(message)
+        reponse = requests.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
+            json={
+                "from": "onboarding@resend.dev",
+                "to": [NOTIFY_EMAIL],
+                "subject": f"Nouvelle coordonnée bancaire reçue — {ligne['nom_groupe']}",
+                "text": texte,
+            },
+            timeout=10,
+        )
+        reponse.raise_for_status()
     except Exception:
         app.logger.exception("Échec de l'envoi de la notification email")
 
