@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordonnées bancaires</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="carte">
+    <h1>Coordonnées bancaires</h1>
+
+    {% if succes %}
+      <p class="message succes">Merci ! Vos informations ont bien été enregistrées.</p>
+    {% else %}
+      <p class="intro">Merci de remplir vos coordonnées bancaires ci-dessous.</p>
+      <form method="post" novalidate>
+        <div class="champ">
+          <label for="nom_groupe">Nom du groupe</label>
+          <input type="text" id="nom_groupe" name="nom_groupe" value="{{ valeurs.get('nom_groupe', '') }}">
+          {% if erreurs.get('nom_groupe') %}<p class="erreur">{{ erreurs['nom_groupe'] }}</p>{% endif %}
+        </div>
+
+        <div class="champ">
+          <label for="iban">IBAN</label>
+          <input type="text" id="iban" name="iban" placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX" value="{{ valeurs.get('iban', '') }}">
+          {% if erreurs.get('iban') %}<p class="erreur">{{ erreurs['iban'] }}</p>{% endif %}
+        </div>
+
+        <div class="champ">
+          <label for="swift">SWIFT / BIC</label>
+          <input type="text" id="swift" name="swift" placeholder="XXXXFRXX" value="{{ valeurs.get('swift', '') }}">
+          {% if erreurs.get('swift') %}<p class="erreur">{{ erreurs['swift'] }}</p>{% endif %}
+        </div>
+
+        <div class="champ">
+          <label for="nom_banque">Nom de la banque</label>
+          <input type="text" id="nom_banque" name="nom_banque" value="{{ valeurs.get('nom_banque', '') }}">
+          {% if erreurs.get('nom_banque') %}<p class="erreur">{{ erreurs['nom_banque'] }}</p>{% endif %}
+        </div>
+
+        <div class="champ">
+          <label for="lieu_banque">Lieu de la banque</label>
+          <input type="text" id="lieu_banque" name="lieu_banque" value="{{ valeurs.get('lieu_banque', '') }}">
+          {% if erreurs.get('lieu_banque') %}<p class="erreur">{{ erreurs['lieu_banque'] }}</p>{% endif %}
+        </div>
+
+        <div class="champ">
+          <label for="nom_titulaire">Nom du titulaire du compte</label>
+          <input type="text" id="nom_titulaire" name="nom_titulaire" value="{{ valeurs.get('nom_titulaire', '') }}">
+          {% if erreurs.get('nom_titulaire') %}<p class="erreur">{{ erreurs['nom_titulaire'] }}</p>{% endif %}
+        </div>
+
+        <div class="champ">
+          <label for="lieu_titulaire">Lieu du titulaire</label>
+          <input type="text" id="lieu_titulaire" name="lieu_titulaire" value="{{ valeurs.get('lieu_titulaire', '') }}">
+          {% if erreurs.get('lieu_titulaire') %}<p class="erreur">{{ erreurs['lieu_titulaire'] }}</p>{% endif %}
+        </div>
+
+        <button type="submit">Envoyer</button>
+      </form>
+    {% endif %}
+  </main>
+
+  <script src="{{ url_for('static', filename='validate.js') }}"></script>
+</body>
+</html>
